@@ -1,6 +1,7 @@
 const only = require('only')
 const User = require('../models/User')
 const { generatePwd } = require('../utils/helper')
+const config = require('../config')
 
 // 登录
 const login = async (ctx) => {
@@ -16,6 +17,9 @@ const login = async (ctx) => {
   }
   if (user.pwd !== pwd) {
     ctx.throw(400, 'Wrong password')
+  }
+  if (user.status !== config.status.Available) {
+    ctx.throw(400, 'User is not available')
   }
 
   ctx.session.profile = only(user, 'uid nick privilege pwd')
